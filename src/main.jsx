@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminHomePage from './pages/admin/AdminHomePage'
 import AddDestination from './pages/admin/AddDestinationPage'
 import DestinationDetailsPage from './pages/user/DestinationDetailsPage'
+import ClientPage from "./pages/admin/DestinationsPage";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/destination_details/:id",
     element: <DestinationDetailsPage />,
+  },
+  {
+    path: "/destinations/",
+    element: <ClientPage />,
   },
 ]);
 

@@ -79,6 +79,7 @@ function CoffeeShopPage() {
                     className="date-picker"
                     minDate={new Date()}
                     dateFormat="MMMM d, yyyy"
+                    placeholderText="Select a Date"
                   />
                   <div className="btn-container">
                     <button className="reserve-btn">Reserve Now</button>
