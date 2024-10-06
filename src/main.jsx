@@ -2,17 +2,22 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AdminHomePage from "./pages/admin/AdminHomePage.jsx";
-import AddDestination from "./pages/admin/AddDestinationPage.jsx";
+import AdminHomePage from './pages/admin/AdminHomePage'
+import AddDestination from './pages/admin/AddDestinationPage'
+import DestinationDetailsPage from './pages/user/DestinationDetailsPage'
 
 const router = createBrowserRouter([
   {
     path: "/admin_home_page",
-    element: <AdminHomePage/>,
+    element:<AdminHomePage/>,
   },
   {
     path: "/add_destination",
-    element: <AddDestination/>,
+    element: <AddDestination />,
+  },
+  {
+    path: "/destination_details/:id",
+    element: <DestinationDetailsPage />,
   },
 ]);
 

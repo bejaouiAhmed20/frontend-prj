@@ -1,12 +1,12 @@
-import { List, ListItem, ListItemText } from "@mui/material";
+import { Container } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from 'react-router-dom';
-
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Card from "./Card";
 
 function AdminHomePage() {
   const [data, setData] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -17,25 +17,26 @@ function AdminHomePage() {
       })
       .catch((err) => console.log(err));
   }, []);
+  const handleClick = (id)=>{
+    navigate(`/destination_details/${id}`)
+  }
   return (
     <div>
-      <div >AdminHomePage</div>
+      <div className="text-red-400">AdminHomePage</div>
       <Link to={"/add_destination"}>Add a Destination</Link>
-      <List>
+
+      <Container>
         {data.map((ele) => (
-          <ListItem key={ele.id} className="border border-black ">
-            <ListItemText
-              primary={`Name: ${ele.name}`}
-              secondary={`Address: ${ele.tables}`}
-            />
-            <img
-              src={"http://localhost:5000/" + ele.image}
-              alt={ele.name}
-              style={{ width: "100px", height: "auto", marginLeft: "10px" }}
-            />
-          </ListItem>
+          <Card
+            key={ele.id}
+            name={ele.name}
+            description={ele.description}
+            adresse={ele.adresse}
+            image={"http://localhost:5000/" + ele.image}
+            handleClick={()=>handleClick(ele.id)}
+          />
         ))}
-      </List>
+      </Container>
     </div>
   );
 }
