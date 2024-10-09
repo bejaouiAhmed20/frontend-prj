@@ -27,19 +27,16 @@ function ClientPage() {
       });
   }, []);
 
-  // Search filter handler
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
 
-    // Filter data by name based on the search term
     const filtered = data.filter((item) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
   };
 
-  // Placeholder for future filtering logic
   const handleFilterByAddress = () => {
     console.log("Filter by address functionality goes here.");
   };
@@ -54,7 +51,7 @@ function ClientPage() {
 
   return (
     <div>
-      <h2>Client Page</h2>
+      <h2 className="text-3xl text-center m-4 capitalize">Client Page</h2>
       <Container>
         <TextField
           label="Search by Name"
@@ -64,14 +61,14 @@ function ClientPage() {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={handleFilterByAddress}
           style={{ marginTop: "10px" }}
         >
           Filter by Address
-        </Button>
+        </Button> */}
       </Container>
 
       <Container style={{ marginTop: "20px" }}>

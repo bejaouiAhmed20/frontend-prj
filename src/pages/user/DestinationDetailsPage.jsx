@@ -6,11 +6,14 @@ import { MdTableBar } from "react-icons/md";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
+import { Alert, Snackbar, TextField } from "@mui/material";
 
 function CoffeeShopPage() {
   const [data, setData] = useState([]);
   const { id } = useParams();
   const [selectedDate, setSelectedDate] = useState(null);
+  const [nbPersons, setNbPersons] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     GetOneDestination();
@@ -18,16 +21,44 @@ function CoffeeShopPage() {
 
   function GetOneDestination() {
     axios
-      .get("http://localhost:5000/onedestinations/" + id)
+      .get("http://localhost:5000/destinations/" + id)
       .then((res) => {
         setData(res.data);
         console.log("Data received: ", res.data);
       })
       .catch((err) => console.log(err));
   }
+  function handleSubmit(){
+    axios.post("http://localhost:5000/reservations/add/"+id,{idClient:1,numberOfPersons:nbPersons,reservationDate:selectedDate})
+    .then(res=>{
+      if(res.status===200){
+        setOpen(true)
+      }
+    })
+    .catch(err=>console.log(err))
+  }
 
   return (
     <StyledWrapper>
+      <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          anchorOrigin={{vertical:"top",horizontal :"right"}}
+          onClose={() => {
+            setOpen(false);
+          }}
+        >
+          <Alert
+            onClose={() => {
+              setOpen(false);
+            }}
+            severity="success"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            Reservation Added successfully
+          </Alert>
+        </Snackbar>
       <div className="coffee-shop-container">
         {data[0] && (
           <>
@@ -75,14 +106,15 @@ function CoffeeShopPage() {
                   <p>Select Date</p>
                   <DatePicker
                     selected={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
+                    onChange={(date) => setSelectedDate(date.toLocaleDateString())}
                     className="date-picker"
                     minDate={new Date()}
                     dateFormat="MMMM d, yyyy"
                     placeholderText="Select a Date"
                   />
+                  <TextField placeholder="number of person" type="number" fullWidth onChange={e=>setNbPersons(e.target.value)}/>
                   <div className="btn-container">
-                    <button className="reserve-btn">Reserve Now</button>
+                    <button className="reserve-btn" onClick={handleSubmit}>Reserve Now</button>
                   </div>
                 </div>
               </div>
@@ -96,7 +128,7 @@ function CoffeeShopPage() {
 
 const StyledWrapper = styled.div`
   .coffee-shop-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
   }
