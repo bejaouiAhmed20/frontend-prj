@@ -41,7 +41,7 @@ function AddDestination() {
     formData.append("phone", phone);
     formData.append("type", type);
     axios
-      .post("http://localhost:5000/addDestination", formData)
+      .post("http://localhost:5000/destinations/add", formData)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {

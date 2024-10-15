@@ -46,7 +46,7 @@ const AdminTable = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/delete/${id}`)
+      .delete(`http://localhost:5000/destinations/delete/${id}`)
       .then(() => {
         console.log("Element supprimé");
         setOpen(false);
