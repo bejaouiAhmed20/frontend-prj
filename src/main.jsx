@@ -5,11 +5,23 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddDestination from './pages/admin/AddDestinationPage'
 import DestinationDetailsPage from './pages/user/DestinationDetailsPage'
 import ClientPage from "./pages/user/DestinationsPage";
-import DemoPageContent from './pages/admin/Dashboard'
+import Dashboard from './pages/admin/Dashboard'
+import AdminTable from "./pages/admin/AdminTable";
+import Demands from "./pages/admin/Demands";
 const router = createBrowserRouter([
   {
     path: "/dashboard",
-    element:<DemoPageContent/>,
+    element:<Dashboard/>,
+    children:[
+      {
+        path: "tables",
+        element: <AdminTable />,
+      },
+      {
+        path: "demands",
+        element: <Demands />,
+      },
+    ],
   },
 ,
   {
