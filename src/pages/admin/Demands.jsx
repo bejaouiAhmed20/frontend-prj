@@ -24,8 +24,24 @@ function Demands() {
     setOpen(false)
   }
   function accept(){
-    
-
+    console.log(id)
+    axios.put(`http://localhost:5000/destinations/${id}`)
+    .then((res) => {
+      console.log(res)
+      setId(null)
+      console.log("normalment saye")
+    })
+    .catch((err) => console.log(err));
+  }
+  function reject(){
+    console.log(id)
+    axios.put(`http://localhost:5000/destinations/reject/${id}`)
+    .then((res) => {
+      console.log(res)
+      setId(null)
+      console.log("normalment saye")
+    })
+    .catch((err) => console.log(err));
   }
   function handleOpen  (i){
     setItem(i)
@@ -33,7 +49,7 @@ function Demands() {
   }
   useEffect(() => {
     axios
-      .get("http://localhost:5000/destinations")
+      .get("http://localhost:5000/destinations/demands")
       .then((res) => {
         setData(res.data);
         console.log(res.data);
@@ -66,7 +82,11 @@ function Demands() {
                 <TableCell align="center">{row.phone}</TableCell>
                 <TableCell align="center">
                   <div className="flex">
-                  <Button variant="contained" color="success">
+                  <Button variant="contained" color="success"
+                  onClick={()=>{
+                    setId(row.id)
+                    accept()
+                  }}>
                     Accept
                   </Button>
                   <Divider orientation="vertical"/>
