@@ -8,6 +8,7 @@ import ClientPage from "./pages/user/DestinationsPage";
 import Dashboard from './pages/admin/Dashboard'
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
+import OwnerAuthPage from "./pages/owner/owner";
 const router = createBrowserRouter([
   {
     path: "/dashboard",
@@ -33,8 +34,12 @@ const router = createBrowserRouter([
     element: <DestinationDetailsPage />,
   },
   {
-    path: "/destinations/",
+    path: "/destinations",
     element: <ClientPage />,
+  },
+  {
+    path: "/owner",
+    element: <OwnerAuthPage />,
   },
 ]);
 
