@@ -24,19 +24,19 @@ function Demands() {
     setOpen(false);
   }
 
-  function accept(id) {
+  function accept(id,email) {
     axios
-      .put(`http://localhost:5000/destinations/${id}`, { email: "gorelaahmed@gmail.com" })
+      .put(`http://localhost:5000/destinations/${id}`, { email })
       .then((res) => {
         console.log("Response:", res);
-        setData(data.filter((item) => item.id !== id)); // Filter accepted destination
+        setData(data.filter((item) => item.id !== id)); 
       })
       .catch((err) => console.log(err));
   }
 
-  function reject(id) {
+  function reject(id,email) {
     axios
-      .put(`http://localhost:5000/destinations/reject/${id}`, { email: "gorelaahmed@gmail.com" })
+      .put(`http://localhost:5000/destinations/reject/${id}`, { email})
       .then((res) => {
         console.log(res);
         setData(data.filter((item) => item.id !== id)); // Filter rejected destination
@@ -85,7 +85,7 @@ function Demands() {
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => accept(row.id)} // Pass id directly
+                      onClick={() => accept(row.id,row.email)} 
                     >
                       Accept
                     </Button>
@@ -93,7 +93,7 @@ function Demands() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => reject(row.id)} // Pass id directly
+                      onClick={() => reject(row.id,row.email)} 
                     >
                       Reject
                     </Button>

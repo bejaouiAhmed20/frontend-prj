@@ -8,9 +8,16 @@ import {
   Paper,
   Snackbar,
   Alert,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 function AddDestination() {
+  const { id } = useParams();
+
   const [name, setName] = useState("");
   const [tables, setTables] = useState("");
   const [address, setAddress] = useState("");
@@ -22,11 +29,9 @@ function AddDestination() {
   const [open, setOpen] = useState(false);
 
   function handleImage(e) {
-    console.log(e.target.files);
     setImage(e.target.files[0]);
   }
   function handleMenuImage(e) {
-    console.log(e.target.files);
     setMenu(e.target.files[0]);
   }
 
@@ -40,10 +45,11 @@ function AddDestination() {
     formData.append("adresse", address);
     formData.append("phone", phone);
     formData.append("type", type);
+    formData.append("id_owner", id);
+    
     axios
       .post("http://localhost:5000/destinations/add", formData)
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           setAddress("");
           setDescription("");
@@ -68,14 +74,10 @@ function AddDestination() {
         <Snackbar
           open={open}
           autoHideDuration={5000}
-          onClose={() => {
-            setOpen(false);
-          }}
+          onClose={() => setOpen(false)}
         >
           <Alert
-            onClose={() => {
-              setOpen(false);
-            }}
+            onClose={() => setOpen(false)}
             severity="success"
             variant="filled"
             sx={{ width: "100%" }}
@@ -109,14 +111,20 @@ function AddDestination() {
           onChange={(e) => setPhoneNumber(e.target.value)}
           value={phone}
         />
-        <TextField
-          label="Type of the Destination"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          onChange={(e) => setType(e.target.value)}
-          value={type}
-        />
+
+        {/* Change from TextField to Select input */}
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Type of the Destination</InputLabel>
+          <Select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            label="Type of the Destination"
+          >
+            <MenuItem value="restaurant">Restaurant</MenuItem>
+            <MenuItem value="cafe_shop">Cafe Shop</MenuItem>
+          </Select>
+        </FormControl>
+
         <TextField
           label="Address"
           variant="outlined"
@@ -126,7 +134,7 @@ function AddDestination() {
           value={address}
         />
         <TextField
-          label="description"
+          label="Description"
           variant="outlined"
           fullWidth
           margin="normal"

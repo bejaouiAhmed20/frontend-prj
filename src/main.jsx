@@ -8,7 +8,8 @@ import ClientPage from "./pages/user/DestinationsPage";
 import Dashboard from './pages/admin/Dashboard'
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
-import OwnerAuthPage from "./pages/owner/owner";
+import AdminHomePage from "./pages/owner/ownerHomePage";
+import OwnerAuthPage from "./pages/owner/ownerLogin";
 const router = createBrowserRouter([
   {
     path: "/dashboard",
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
   },
 ,
   {
-    path: "/add_destination",
+    path: "/add_destination/:id",
     element: <AddDestination />,
   },
   {
@@ -38,9 +39,14 @@ const router = createBrowserRouter([
     element: <ClientPage />,
   },
   {
-    path: "/owner",
+    path: "/login",
     element: <OwnerAuthPage />,
   },
+  {
+    path: "/owner-home-page",
+    element: <AdminHomePage />,
+  },
+
 ]);
 
 createRoot(document.getElementById("root")).render(

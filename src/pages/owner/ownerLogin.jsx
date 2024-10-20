@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+import OwnerHomePage from './OwnerHomePage';
 
 function OwnerAuthPage() {
   const [isLogin, setIsLogin] = useState(true); 
@@ -14,9 +15,6 @@ function OwnerAuthPage() {
 
   const toggleView = () => {
     console.log('Toggling view: ', isLogin ? 'Switching to Sign Up' : 'Switching to Login');
-    
-   
-    
     setIsLogin(!isLogin); 
   };
 
@@ -25,7 +23,7 @@ function OwnerAuthPage() {
     console.log('Form submitted: ', { name, email, password, phone });
     
     if (isLogin) {
-      
+      // Requête de login
       axios
         .post('http://localhost:5000/owner/login', {
           email,
@@ -33,13 +31,14 @@ function OwnerAuthPage() {
         })
         .then((res) => {
           console.log('Login Successful', res.data);
-          navigate('/destinations'); 
+          localStorage.setItem("ownerId", res.data.ownerId);
+          navigate('/owner-home-page'); 
         })
         .catch((err) => {
           console.error('Login Error:', err);
         });
     } else {
-      
+      // Requête de sign up
       axios
         .post('http://localhost:5000/owner/signup', {
           name,
@@ -49,12 +48,11 @@ function OwnerAuthPage() {
         })
         .then((res) => {
           console.log('Signup Successful', res.data);
-          
-           setName('');
-           setEmail('');
-           setPassword('');
-           setPhone('');
-           setIsLogin(isLogin)
+          setName('');
+          setEmail('');
+          setPassword('');
+          setPhone('');
+          setIsLogin(isLogin);
         })
         .catch((err) => {
           console.error('Signup Error:', err);
