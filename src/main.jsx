@@ -1,20 +1,28 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AddDestination from './pages/admin/AddDestinationPage'
-import DestinationDetailsPage from './pages/user/DestinationDetailsPage'
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"; // Import Navigate
+import AddDestination from './pages/admin/AddDestinationPage';
+import DestinationDetailsPage from './pages/user/DestinationDetailsPage';
 import ClientPage from "./pages/user/DestinationsPage";
-import Dashboard from './pages/admin/Dashboard'
+import Dashboard from './pages/admin/Dashboard';
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
 import AdminHomePage from "./pages/owner/ownerHomePage";
 import OwnerAuthPage from "./pages/owner/ownerLogin";
+import HomePage from "./pages/user/HomePage";
+import AboutPage from "./pages/user/AboutPage";
+import NotFoundPage from "./pages/admin/NotFoundPage";
+
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Navigate to="/home" replace />, // Redirect from "/" to "/home"
+  },
+  {
     path: "/dashboard",
-    element:<Dashboard/>,
-    children:[
+    element: <Dashboard />,
+    children: [
       {
         path: "tables",
         element: <AdminTable />,
@@ -25,7 +33,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-,
   {
     path: "/add_destination/:id",
     element: <AddDestination />,
@@ -46,7 +53,18 @@ const router = createBrowserRouter([
     path: "/owner-home-page",
     element: <AdminHomePage />,
   },
-
+  {
+    path: "/home",
+    element: <HomePage />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+  },
+  {
+    path: "*", 
+    element: <NotFoundPage />, 
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

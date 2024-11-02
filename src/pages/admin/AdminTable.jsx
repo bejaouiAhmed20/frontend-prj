@@ -74,10 +74,6 @@ const AdminTable = () => {
   return (
     <Container>
       <h2 className="text-3xl text-center m-4 capitalize">Table des destinations</h2>
-
-      <Button variant="outlined" onClick={() => navigate("/add_destination")}>
-        Add a Destination
-      </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

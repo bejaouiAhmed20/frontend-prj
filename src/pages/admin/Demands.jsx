@@ -62,7 +62,9 @@ function Demands() {
 
   return (
     <Container>
-      Demands
+            <h2 className="text-3xl text-center m-4 capitalize">Demands</h2>
+
+      
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
