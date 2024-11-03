@@ -13,16 +13,25 @@ import OwnerAuthPage from "./pages/owner/ownerLogin";
 import HomePage from "./pages/user/HomePage";
 import AboutPage from "./pages/user/AboutPage";
 import NotFoundPage from "./pages/admin/NotFoundPage";
+import LoginPage from "./pages/admin/loginPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/home" replace />, // Redirect from "/" to "/home"
+    element: <Navigate to="/home" replace />, 
+  },
+  {
+    path: "/admin",
+    element: <LoginPage />,
   },
   {
     path: "/dashboard",
     element: <Dashboard />,
     children: [
+      {
+        index: true,  
+        element: <AdminTable />,
+      },
       {
         path: "tables",
         element: <AdminTable />,
