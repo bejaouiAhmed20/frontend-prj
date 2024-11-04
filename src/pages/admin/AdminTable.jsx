@@ -9,9 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { Container } from "@mui/material";
+import { Container, Divider, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -19,24 +18,41 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
-  const [id, setId] = useState(null); // Handle selected item ID
+  const [selectedId, setSelectedId] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    tables: "",
+    adresse: "",
+    description: "",
+    phone: "",
+    type: ""
+  });
   const navigate = useNavigate();
 
   const handleClickOpen = (rowId) => {
-    setId(rowId); // Set selected ID
+    setSelectedId(rowId);
+    setOpen(true);
+    setIsEditMode(false); 
+  };
+
+  const handleOpenUpdate = (destination) => {
+    setSelectedId(destination.id);
+    setFormData({
+      name: destination.name,
+      tables: destination.tables,
+      adresse: destination.adresse,
+      description: destination.description,
+      phone: destination.phone,
+      type: destination.type
+    });
+    setIsEditMode(true);
     setOpen(true);
   };
 
@@ -46,16 +62,40 @@ const AdminTable = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/destinations/delete/${id}`)
+      .delete(`http://localhost:5000/destinations/delete/${selectedId}`)
       .then(() => {
-        console.log("Element supprimé");
+        toast.success("Destination deleted successfully");
+        setData(data.filter((item) => item.id !== selectedId));
         setOpen(false);
-        setData(data.filter((item) => item.id !== id)); // Update table without refreshing
         navigate("/dashboard");
       })
       .catch((err) => {
-        console.error("Erreur lors de la suppression:", err);
+        console.error("Error during deletion:", err);
       });
+  };
+
+  const handleUpdate = () => {
+    axios
+      .put(`http://localhost:5000/destinations/update/${selectedId}`, formData)
+      .then(() => {
+        toast.success("Destination updated successfully");
+        setData(
+          data.map((item) =>
+            item.id === selectedId ? { ...item, ...formData } : item
+          )
+        );
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.error("Error during update:", err);
+      });
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   useEffect(() => {
@@ -63,13 +103,9 @@ const AdminTable = () => {
       .get("http://localhost:5000/destinations")
       .then((res) => {
         setData(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
-
-  // Find the selected destination's name for display in the dialog
-  const selectedDestination = data.find((item) => item.id === id);
 
   return (
     <Container>
@@ -81,33 +117,27 @@ const AdminTable = () => {
               <TableCell>Nom du destination</TableCell>
               <TableCell align="center">Description</TableCell>
               <TableCell align="center">Nombre des tables</TableCell>
-              <TableCell align="center" >
-                Num. de téléphone
-              </TableCell>
-              <TableCell align="center" >
-                Actions
-              </TableCell>
+              <TableCell align="center">Num. de téléphone</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                
+              <TableRow key={row.id}>
                 <TableCell align="center">{row.name}</TableCell>
                 <TableCell align="center">{row.description}</TableCell>
                 <TableCell align="center">{row.tables}</TableCell>
                 <TableCell align="center">{row.phone}</TableCell>
                 <TableCell align="center">
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleClickOpen(row.id)}
-                  >
-                    Delete
-                  </Button>
+                  <Stack direction="row" spacing={1}>
+                    <Button variant="outlined" color="error" onClick={() => handleClickOpen(row.id)}>
+                      Delete
+                    </Button>
+                    <Divider orientation="vertical" />
+                    <Button variant="outlined" color="success" onClick={() => handleOpenUpdate(row)}>
+                      Update
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -115,43 +145,90 @@ const AdminTable = () => {
         </Table>
       </TableContainer>
 
-      {/* Dialog for deletion confirmation */}
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Name: {selectedDestination?.name || "Destination"}
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle id="dialog-title">
+          {isEditMode ? "Update Destination" : `Delete Destination: ${formData.name}`}
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={(theme) => ({
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: theme.palette.grey[500],
-          })}
-        >
-          <CloseIcon />
-        </IconButton>
         <DialogContent dividers>
-          <Typography gutterBottom>
-            Are you sure you want to delete this destination?
-          </Typography>
+          {isEditMode ? (
+            <>
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Tables"
+                name="tables"
+                type="number"
+                value={formData.tables}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Adresse"
+                name="adresse"
+                value={formData.adresse}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Type"
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
+            </>
+          ) : (
+            <Typography gutterBottom>
+              Are you sure you want to delete this destination?
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Cancle
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            variant="outlined"
+            color={isEditMode ? "primary" : "error"}
+            onClick={isEditMode ? handleUpdate : handleDelete}
+          >
+            {isEditMode ? "Update" : "Delete"}
           </Button>
-          <Stack direction="row" spacing={2}>
-            <Button variant="outlined" color="error" onClick={handleDelete}>
-              Delete
-            </Button>
-          </Stack>
         </DialogActions>
-      </BootstrapDialog>
+      </Dialog>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </Container>
   );
 };

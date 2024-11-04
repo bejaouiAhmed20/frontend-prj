@@ -1,7 +1,15 @@
 import { Container } from "postcss";
-import { Link, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if( localStorage.getItem('isAuthenticated')!= 'true'){
+        navigate('/admin')
+    }
+  
+  },[])
   return(
     <div>
       <h1>Dashboard</h1>

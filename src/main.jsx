@@ -9,11 +9,12 @@ import Dashboard from './pages/admin/Dashboard';
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
 import AdminHomePage from "./pages/owner/ownerHomePage";
-import OwnerAuthPage from "./pages/owner/ownerLogin";
 import HomePage from "./pages/user/HomePage";
 import AboutPage from "./pages/user/AboutPage";
 import NotFoundPage from "./pages/admin/NotFoundPage";
 import LoginPage from "./pages/admin/loginPage";
+import OwnerAuthPage from "./pages/owner/ownerLogin";
+
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: <OwnerAuthPage />,
   },
+
   {
     path: "/owner-home-page",
     element: <AdminHomePage />,
