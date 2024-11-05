@@ -1,42 +1,62 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 
-export default function RecipeReviewCard({ name, image, description,id }) {
+export default function RecipeReviewCard({ item }) {
   const navigate = useNavigate();
+
   const handleSeeMore = () => {
-    navigate('/destination_details/'+id );
+    navigate(`/destination_details/${item.id}`);
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardHeader title={name} subheader="test" />
-      <CardMedia
-        component="img"
-        height="194"
-        image={`http://localhost:5000/${image}`}
-        alt={name}
-      />
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="body2" color="text.secondary" flexGrow={1}>
-            {description}
+    <Card className="flex w-full rounded-lg p-4 border border-gray-400">
+      {/* Image Section */}
+      <div className="relative w-1/3 rounded-lg overflow-hidden mr-4">
+        <img
+          className="w-full h-full object-cover"
+          src={`http://localhost:5000/${item.image}`}
+          alt={name}
+        />
+      </div>
+
+      {/* Content Section */}
+      <CardContent className="flex flex-col w-2/3">
+        {/* Title and Rating */}
+        <Box className="flex justify-between items-center mb-2">
+          <Typography variant="h6" className="font-bold text-blue-700 capitalize">
+            {item.name}
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSeeMore} 
-            sx={{ ml: 2 }} 
-          >
-            See more
-          </Button>
+          <Box className="flex items-center">
+            <Box className="bg-blue-800 text-white p-2 rounded-md text-sm font-bold">
+              8,6
+            </Box>
+          </Box>
         </Box>
+
+        {/* Location and Description */}
+        <Typography variant="body2" className="text-blue-500 mb-1">
+          {item.adresse}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" className="mb-4">
+          {item.description}
+        </Typography>
+
+        {/* Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSeeMore}
+          className="self-start bg-blue-600 text-white mt-auto"
+        >
+          see More
+        </Button>
       </CardContent>
     </Card>
   );

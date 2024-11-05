@@ -1,8 +1,9 @@
-import { Container, TextField, Button, Grid } from "@mui/material"; // Import Grid component
+import { Container, TextField, Button, Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card";
+import AppBarComponent from "../../components/AppBarComponent";
 
 function ClientPage() {
   const [data, setData] = useState([]); // Data from API
@@ -17,6 +18,7 @@ function ClientPage() {
       .get("http://localhost:5000/destinations")
       .then((res) => {
         setData(res.data);
+        console.log(res.data)
         setFilteredData(res.data);
         setLoading(false);
       })
@@ -37,10 +39,6 @@ function ClientPage() {
     setFilteredData(filtered);
   };
 
-  const handleFilterByAddress = () => {
-    console.log("Filter by address functionality goes here.");
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -51,6 +49,7 @@ function ClientPage() {
 
   return (
     <div>
+      <AppBarComponent />
       <h2 className="text-3xl text-center m-4 capitalize">Client Page</h2>
       <Container>
         <TextField
@@ -61,26 +60,16 @@ function ClientPage() {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        {/* <Button
-          variant="contained"
-          color="primary"
-          onClick={handleFilterByAddress}
-          style={{ marginTop: "10px" }}
-        >
-          Filter by Address
-        </Button> */}
       </Container>
 
       <Container style={{ marginTop: "20px" }}>
-        <Grid container spacing={3}> 
+        <Grid container spacing={3}>
           {filteredData.length > 0 ? (
             filteredData.map((item) => (
-              <Grid item xs={12} sm={6} md={4} key={item.id}> 
+              <Grid item xs={12} key={item.id}> {/* Each item now takes full width */}
                 <Card
-                id ={item.id}
-                  name={item.name}
-                  image={item.image}
-                  description={item.description}
+                  item={item}
+                  
                 />
               </Grid>
             ))
