@@ -48,6 +48,9 @@ function AppBarComponent() {
           className="mt-2"
         >
           <MenuItem onClick={handleMenuClose}>
+          <Button variant="text"  >My Reservations</Button>
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose}>
           <Button variant="text"  >Profile</Button>
           </MenuItem>
           <MenuItem onClick={handleMenuClose}>

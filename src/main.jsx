@@ -1,3 +1,4 @@
+// index.js (Routes)
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -14,7 +15,7 @@ import AboutPage from "./pages/user/AboutPage";
 import NotFoundPage from "./pages/admin/NotFoundPage";
 import LoginPage from "./pages/admin/loginPage";
 import OwnerAuthPage from "./pages/owner/ownerLogin";
-
+import MenuPage from "./pages/owner/MenuPage";
 
 const router = createBrowserRouter([
   {
@@ -29,23 +30,10 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
-      {
-        index: true,  
-        element: <AdminTable />,
-      },
-      {
-        path: "tables",
-        element: <AdminTable />,
-      },
-      {
-        path: "demands",
-        element: <Demands />,
-      },
+      { index: true, element: <AdminTable /> },
+      { path: "tables", element: <AdminTable /> },
+      { path: "demands", element: <Demands /> },
     ],
-  },
-  {
-    path: "/add_destination/:id",
-    element: <AddDestination />,
   },
   {
     path: "/destination_details/:id",
@@ -59,10 +47,13 @@ const router = createBrowserRouter([
     path: "/login",
     element: <OwnerAuthPage />,
   },
-
   {
     path: "/owner-home-page",
     element: <AdminHomePage />,
+    children: [
+      { path: "menus/:id", element: <MenuPage /> },
+      { path: "add_destination/:id", element: <AddDestination /> },
+    ],
   },
   {
     path: "/home",
