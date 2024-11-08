@@ -12,10 +12,6 @@ function AdminHomePage() {
 
   useEffect(() => {
     setId(localStorage.getItem("ownerId"));
-    axios
-      .get(`http://localhost:5000/destinations/${id}`)
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
   }, [id]);
 
   const handleClick = (id) => {
@@ -76,18 +72,6 @@ function AdminHomePage() {
       <div className="flex-1 p-4 ml-[250px]">
         <Container>
           <Outlet /> 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.map((ele) => (
-              <Card
-                key={ele.id}
-                name={ele.name}
-                description={ele.description}
-                adresse={ele.adresse}
-                image={"http://localhost:5000/destinations" + ele.image}
-                handleClick={() => handleClick(ele.id)}
-              />
-            ))}
-          </div>
         </Container>
       </div>
     </div>
