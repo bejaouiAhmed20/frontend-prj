@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   TextField, Button, Box, Container, TableContainer, Table, TableHead, TableRow,
   TableCell, TableBody, Paper, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Divider, MenuItem, Select, InputLabel, FormControl
@@ -15,9 +15,11 @@ const MenuPage = () => {
   const [editMenuId, setEditMenuId] = useState(null);
   const [open, setOpen] = useState(false);
   const [destinations, setDestinations] = useState([]);
+  const navigate = useNavigate()
 
   // Fetch all menus
   useEffect(() => {
+    if(localStorage.getItem("ownerId")){
     axios.get(`http://localhost:5000/menus/owner_menu/${id}`)
       .then(response => {
         setMenus(response.data);
@@ -25,7 +27,10 @@ const MenuPage = () => {
       .catch((err) => {
         console.error("Error fetching Menus:", err);
         toast.error("Failed to load menus.");
-      });
+      });}
+      else{
+        navigate('/login')
+      }
   }, [id]);
 
   // Fetch destinations and filter them based on owner id
@@ -52,6 +57,7 @@ const MenuPage = () => {
 
   // Save the new menu or update existing menu
   const saveMenu = async () => {
+
     try {
       if (editMenuId) {
         // Update existing menu

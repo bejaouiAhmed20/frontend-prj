@@ -1,62 +1,60 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import styled from "styled-components";
+import styled from 'styled-components';
+import axios from 'axios';
 
-function OwnerAuthPage() {
-  const [isLogin, setIsLogin] = useState(true); 
+function OwnerAuthPage({ isLogin, userType }) {
   const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-
-  const navigate = useNavigate(); 
-
-  const toggleView = () => {
-    console.log('Toggling view: ', isLogin ? 'Switching to Sign Up' : 'Switching to Login');
-    setIsLogin(!isLogin); 
-  };
+  const [message, setMessage] = useState(''); 
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted: ', { name, email, password, phone });
-    
-    if (isLogin) {
-      // Requête de login
-      axios
-        .post('http://localhost:5000/owner/login', {
-          email,
-          password,
-        })
-        .then((res) => {
-          console.log('Login Successful', res.data);
-          localStorage.setItem("ownerId", res.data.ownerId);
-          navigate('/owner-home-page'); 
-        })
-        .catch((err) => {
-          console.error('Login Error:', err);
-        });
-    } else {
-      // Requête de sign up
-      axios
-        .post('http://localhost:5000/owner/signup', {
-          name,
-          email,
-          password,
-          phone,
-        })
-        .then((res) => {
-          console.log('Signup Successful', res.data);
+    const endpoint = userType === 'owner' ? 'owner' : 'client';
+    const url = `http://localhost:5000/${endpoint}/${isLogin ? 'login' : 'signup'}`;
+
+    const requestData = {
+      email,
+      password,
+      ...(userType === 'owner' ? { name, phone } : { firstName, lastName, phone })
+    };
+
+    axios
+      .post(url, requestData)
+      .then((res) => {
+        console.log('Success:', res.data);
+        const idKey = userType === 'owner' ? "ownerId" : "clientId";
+        localStorage.setItem(idKey, res.data[idKey]);
+
+        if (isLogin) {
+        
+          navigate(userType === 'owner' ? `/owner-home-page` : `/destinations`);
+        } else {
+        
+          setMessage('Registration successful! Please log in.');
+
+        
           setName('');
+          setFirstName('');
+          setLastName('');
           setEmail('');
           setPassword('');
           setPhone('');
-          setIsLogin(isLogin);
-        })
-        .catch((err) => {
-          console.error('Signup Error:', err);
-        });
-    }
+
+          setTimeout(() => {
+            navigate(`/login-${userType}`);
+          }, 2000); 
+        }
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+        setMessage('Invalid credentials, please try again.');
+      });
   };
 
   return (
@@ -64,62 +62,78 @@ function OwnerAuthPage() {
       <div className="auth-container">
         <div className="auth-box">
           <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
-
           <form onSubmit={handleSubmit}>
-            {!isLogin && (
+          
+            {!isLogin && userType === 'owner' && (
               <div className="form-group">
                 <label>Name:</label>
                 <input
                   type="text"
-                  name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </div>
             )}
-
+            {!isLogin && userType === 'client' && (
+              <>
+                <div className="form-group">
+                  <label>First Name:</label>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Last Name:</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div className="form-group">
               <label>Email:</label>
               <input
                 type="email"
-                name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-
             <div className="form-group">
               <label>Password:</label>
               <input
                 type="password"
-                name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-
             {!isLogin && (
               <div className="form-group">
                 <label>Phone:</label>
                 <input
                   type="text"
-                  name="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
                 />
               </div>
             )}
-
             <button type="submit" className="submit-btn">
               {isLogin ? 'Login' : 'Sign Up'}
             </button>
           </form>
 
-          <p onClick={toggleView} className="toggle-view">
+          {message && <p className="message">{message}</p>}
+
+          <p className="toggle-view" onClick={() => navigate(isLogin ? `/signup-${userType}` : `/login-${userType}`)}>
             {isLogin
               ? "Don't have an account? Sign up here."
               : 'Already have an account? Login here.'}
@@ -131,7 +145,7 @@ function OwnerAuthPage() {
 }
 
 const StyledWrapper = styled.div`
-  /* Reset some basic styles */
+  /* Basic styles */
   * {
     margin: 0;
     padding: 0;
@@ -192,35 +206,36 @@ const StyledWrapper = styled.div`
   .form-group input:focus {
     outline: none;
     border-color: #74ebd5;
-    box-shadow: 0 0 5px rgba(116, 235, 213, 0.5);
   }
 
   .submit-btn {
     background-color: #74ebd5;
     color: white;
-    font-size: 16px;
     padding: 12px 20px;
-    width: 100%;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%;
   }
 
   .submit-btn:hover {
-    background-color: #57d3c3;
+    background-color: #acb6e5;
   }
 
   .toggle-view {
-    margin-top: 20px;
-    color: #555;
+    margin-top: 10px;
     font-size: 14px;
+    color: #333;
     cursor: pointer;
-    transition: color 0.3s ease;
+    text-decoration: underline;
   }
 
-  .toggle-view:hover {
-    color: #333;
+  /* Styling for message */
+  .message {
+    margin-top: 15px;
+    color: #ff0000;
+    font-size: 14px;
+    font-weight: bold;
   }
 `;
 

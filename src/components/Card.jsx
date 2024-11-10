@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 
-export default function RecipeReviewCard({ item }) {
+export default function RecipeReviewCard({ item,averageRating}) {
   const navigate = useNavigate();
 
   const handleSeeMore = () => {
@@ -34,8 +34,8 @@ export default function RecipeReviewCard({ item }) {
             {item.name}
           </Typography>
           <Box className="flex items-center">
-            <Box className="bg-blue-800 text-white p-2 rounded-md text-sm font-bold">
-              8,6
+            <Box className="bg-blue-800 text-white w-8 h-8 flex justify-center items-center rounded-md text-sm font-bold">
+              {averageRating}
             </Box>
           </Box>
         </Box>

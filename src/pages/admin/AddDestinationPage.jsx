@@ -40,7 +40,6 @@ function AddDestination() {
     formData.append("name", name);
     formData.append("tables", tables);
     formData.append("image", image);
-    formData.append("menu", menu);
     formData.append("description", description);
     formData.append("adresse", address);
     formData.append("phone", phone);
@@ -148,13 +147,7 @@ function AddDestination() {
           onChange={handleImage}
           style={{ margin: "20px 0" }}
         />
-        <p>Menu :</p>
-        <input
-          type="file"
-          name="Menu"
-          onChange={handleMenuImage}
-          style={{ margin: "20px 0" }}
-        />
+       
         <br />
         <Button
           variant="contained"

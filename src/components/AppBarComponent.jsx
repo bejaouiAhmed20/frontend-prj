@@ -7,17 +7,21 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Button, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function AppBarComponent() {
   const [anchorEl, setAnchorEl] = useState(null);
-  
+  const navigate = useNavigate()
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); 
+    navigate("/login-client"); 
+  };
 
   return (
     <AppBar position="static" className="bg-gray-800 shadow-md">
@@ -53,7 +57,7 @@ function AppBarComponent() {
           <MenuItem onClick={handleMenuClose}>
           <Button variant="text"  >Profile</Button>
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={handleLogout}>
           <Button variant="text" color='warning'>Logout</Button>
           </MenuItem>
         </Menu>

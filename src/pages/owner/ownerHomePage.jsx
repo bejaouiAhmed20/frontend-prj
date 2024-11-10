@@ -11,11 +11,17 @@ function AdminHomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setId(localStorage.getItem("ownerId"));
+    if(localStorage.getItem("ownerId")){
+      setId(localStorage.getItem("ownerId"));
+    }
+    else{
+      navigate("/login-owner")
+    }
   }, [id]);
 
-  const handleClick = (id) => {
-    navigate(`/destination_details/${id}`);
+  function handleLogout () {
+    localStorage.clear();
+    navigate(`/login-owner`);
   };
 
   return (
@@ -45,7 +51,7 @@ function AdminHomePage() {
               <FaPlus className="mr-2" />
               <ListItemText primary="Add Destination" />
             </ListItem>
-            <ListItem button component={Link} to={`reservations/${id}`}>
+            <ListItem button component={Link} to={`reservations`}>
               <FaUtensils className="mr-2" />
               <ListItemText primary="Reservation" />
             </ListItem>
@@ -53,15 +59,15 @@ function AdminHomePage() {
               <FaUtensils className="mr-2" />
               <ListItemText primary="Menu" />
             </ListItem>
-            <ListItem button component={Link} to={`profile/${id}`}>
+            <ListItem button component={Link} to={`owner_profile/${id}`}>
               <FaUser className="mr-2" />
               <ListItemText primary="Profile" />
             </ListItem>
-            <ListItem button component={Link} to={`offers/${id}`}>
+            <ListItem button component={Link} to={`offers`}>
               <FaTags className="mr-2" />
               <ListItemText primary="Offers" />
             </ListItem>
-            <ListItem button component={Link} to="/logout">
+            <ListItem button onClick={handleLogout}>
               <FaSignOutAlt className="mr-2 text-red-500" />
               <ListItemText primary="Logout" />
             </ListItem>

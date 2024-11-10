@@ -9,6 +9,7 @@ const MenuDisplayPage = () => {
   const [menus, setMenus] = useState([]);
 
   useEffect(() => {
+    
     const fetchMenus = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/menus/${id}`);

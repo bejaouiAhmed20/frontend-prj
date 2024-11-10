@@ -6,7 +6,6 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import AddDestination from './pages/admin/AddDestinationPage';
 import DestinationDetailsPage from './pages/user/DestinationDetailsPage';
 import ClientPage from "./pages/user/DestinationsPage";
-import Dashboard from './pages/admin/Dashboard';
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
 import AdminHomePage from "./pages/owner/ownerHomePage";
@@ -16,6 +15,13 @@ import NotFoundPage from "./pages/admin/NotFoundPage";
 import LoginPage from "./pages/admin/loginPage";
 import OwnerAuthPage from "./pages/owner/ownerLogin";
 import MenuPage from "./pages/owner/MenuPage";
+import EditOwnerProfile from "./pages/owner/EditOwnerProfile";
+import ReservationsDisplay from "./pages/owner/ReservationsDisplay";
+import Offers from "./pages/owner/Offers";
+import Dashboard from "./pages/admin/Dashboard";
+import AdminProfile from "./pages/admin/AdminProfile";
+import Owner from "./pages/admin/Owner";
+import Clients from "./pages/admin/Clients";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +39,10 @@ const router = createBrowserRouter([
       { index: true, element: <AdminTable /> },
       { path: "tables", element: <AdminTable /> },
       { path: "demands", element: <Demands /> },
+      { path: "profile", element: <AdminProfile /> },
+      { path: "owners", element: <Owner /> },
+      { path: "clients", element: <Clients /> },
+
     ],
   },
   {
@@ -44,8 +54,20 @@ const router = createBrowserRouter([
     element: <ClientPage />,
   },
   {
-    path: "/login",
-    element: <OwnerAuthPage />,
+    path: "/login-owner",
+    element: <OwnerAuthPage isLogin={true} userType="owner" />,
+  },
+  {
+    path: "/signup-owner",
+    element: <OwnerAuthPage isLogin={false} userType="owner" />,
+  },
+  {
+    path: "/login-client",
+    element: <OwnerAuthPage isLogin={true} userType="client" />,
+  },
+  {
+    path: "/signup-client",
+    element: <OwnerAuthPage isLogin={false} userType="client" />,
   },
   {
     path: "/owner-home-page",
@@ -53,6 +75,9 @@ const router = createBrowserRouter([
     children: [
       { path: "menus/:id", element: <MenuPage /> },
       { path: "add_destination/:id", element: <AddDestination /> },
+      { path: "owner_profile/:id", element: <EditOwnerProfile /> },
+      { path: "reservations", element: <ReservationsDisplay /> },
+      { path: "offers", element: <Offers /> },
     ],
   },
   {

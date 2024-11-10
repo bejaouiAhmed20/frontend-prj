@@ -26,7 +26,7 @@ function Demands() {
 
   function accept(id,email) {
     axios
-      .put(`http://localhost:5000/destinations/${id}`, { email })
+      .put(`http://localhost:5000/destinations/accept/${id}`, { email })
       .then((res) => {
         console.log("Response:", res);
         setData(data.filter((item) => item.id !== id)); 
