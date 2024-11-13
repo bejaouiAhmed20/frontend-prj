@@ -16,7 +16,6 @@ function EditOwnerProfile() {
 
   const ownerId = localStorage.getItem('ownerId');
 
-  // Fetch owner details on component mount
   useEffect(() => {
 
     const fetchOwnerDetails = async () => {

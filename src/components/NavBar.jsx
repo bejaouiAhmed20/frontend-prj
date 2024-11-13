@@ -1,6 +1,7 @@
 import { Button, Toolbar, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import image from "../assets/Rezervi.png"
 
 function NavBar() {
   const [isOwner, setIsOwner] = useState(false); // Default to 'client' on page load
@@ -8,9 +9,16 @@ function NavBar() {
   return (
     <nav style={{ position: 'sticky', top: 0, zIndex: 1000 }} className="bg-gray-800">
       <Toolbar className="flex justify-between">
-        <Typography variant="h6" component="div" className="font-bold text-white">
-          Reservi
-        </Typography>
+        <div className="flex items-center">
+          <img
+            src={image}
+            alt="Logo"
+            className="h-8 w-auto mr-2"
+          />
+        
+
+        </div>
+
         <div className="space-x-4 text-white">
           <Link to="/home">
             <Button color="inherit">Home</Button>

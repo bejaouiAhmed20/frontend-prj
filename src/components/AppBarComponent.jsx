@@ -1,6 +1,4 @@
-// AppBarComponent.js
 import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
@@ -8,34 +6,47 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import image from "../assets/Rezervi.png"
 
 function AppBarComponent() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("authToken"); 
-    navigate("/login-client"); 
-  };
+    localStorage.removeItem("clientId"); 
+    navigate("/login-client"); 
+  };
+
+  const handleMyReservationsClick = () => {
+    const clientId = localStorage.getItem("clientId"); 
+    if (clientId) {
+      navigate(`/mes-reservations/${clientId}`); 
+      handleMenuClose();
+    } else {
+      console.error('Client ID not found in localStorage.');
+    }
+  };
 
   return (
-    <AppBar position="static" className="bg-gray-800 shadow-md">
+    <nav style={{ position: 'sticky', top: 0, zIndex: 1000 }} className="bg-gray-800">
       <Toolbar className="flex justify-between">
-        {/* Logo */}
         <div className="flex items-center">
           <img
-            src="path_to_logo.png"
+            src={image}
             alt="Logo"
             className="h-8 w-auto mr-2"
           />
-          <Typography variant="h6" className="text-white">
-            Reservi
-          </Typography>
+        
+
         </div>
 
         {/* Avatar with Menu */}
@@ -51,18 +62,22 @@ function AppBarComponent() {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           className="mt-2"
         >
-          <MenuItem onClick={handleMenuClose}>
-          <Button variant="text"  >My Reservations</Button>
+          <MenuItem onClick={handleMyReservationsClick}>
+            <Button variant="text">My Reservations</Button>
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
-          <Button variant="text"  >Profile</Button>
+          <MenuItem onClick={()=>{
+            navigate("/user_profile")
+            handleMenuClos()
+
+          }}>
+            <Button variant="text">Profile</Button>
           </MenuItem>
           <MenuItem onClick={handleLogout}>
-          <Button variant="text" color='warning'>Logout</Button>
+            <Button variant="text" color="warning">Logout</Button>
           </MenuItem>
         </Menu>
       </Toolbar>
-    </AppBar>
+    </nav>
   );
 }
 

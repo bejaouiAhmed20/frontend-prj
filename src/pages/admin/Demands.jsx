@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DialogComp from "../../components/DialogComp";
 
 function Demands() {
@@ -24,19 +24,19 @@ function Demands() {
     setOpen(false);
   }
 
-  function accept(id,email) {
+  function accept(id, email) {
     axios
       .put(`http://localhost:5000/destinations/accept/${id}`, { email })
       .then((res) => {
         console.log("Response:", res);
-        setData(data.filter((item) => item.id !== id)); 
+        setData(data.filter((item) => item.id !== id));
       })
       .catch((err) => console.log(err));
   }
 
-  function reject(id,email) {
+  function reject(id, email) {
     axios
-      .put(`http://localhost:5000/destinations/reject/${id}`, { email})
+      .put(`http://localhost:5000/destinations/reject/${id}`, { email })
       .then((res) => {
         console.log(res);
         setData(data.filter((item) => item.id !== id)); // Filter rejected destination
@@ -62,9 +62,8 @@ function Demands() {
 
   return (
     <Container>
-            <h2 className="text-3xl text-center m-4 capitalize">Demands</h2>
+      <h2 className="text-3xl text-center m-4 capitalize">Demands</h2>
 
-      
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -78,7 +77,10 @@ function Demands() {
           </TableHead>
           <TableBody>
             {data.map((row) => (
-              <TableRow key={row.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableRow
+                key={row.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
                 <TableCell align="center">{row.name}</TableCell>
                 <TableCell align="center">{row.adresse}</TableCell>
                 <TableCell align="center">{row.phone}</TableCell>
@@ -87,7 +89,7 @@ function Demands() {
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => accept(row.id,row.email)} 
+                      onClick={() => accept(row.id, row.email)}
                     >
                       Accept
                     </Button>
@@ -95,14 +97,18 @@ function Demands() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => reject(row.id,row.email)} 
+                      onClick={() => reject(row.id, row.email)}
                     >
                       Reject
                     </Button>
                   </div>
                 </TableCell>
                 <TableCell align="center">
-                  <Button variant="contained" color="info" onClick={() => handleOpen(row)}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={() => handleOpen(row)}
+                  >
                     See More
                   </Button>
                 </TableCell>

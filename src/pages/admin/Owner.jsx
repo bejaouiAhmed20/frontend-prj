@@ -42,7 +42,7 @@ const Owner = () => {
   const handleOpenUpdate = (owner) => {
     setSelectedIdOwner(owner.id);
     setFormData({
-      name: owner.name, // Changer "firstName" en "name"
+      name: owner.name,
       email: owner.email,
       phone: owner.phone,
     });
@@ -56,7 +56,7 @@ const Owner = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/owners/deleteOwner/${selectedIdOwner}`)
+      .delete(`http://localhost:5000/owner/deleteOwner/${selectedIdOwner}`)
       .then(() => {
         toast.success("Propriétaire supprimé avec succès");
         setOwners(owners.filter((owner) => owner.id !== selectedIdOwner));
@@ -71,7 +71,7 @@ const Owner = () => {
   const handleUpdate = () => {
     axios
       .put(
-        `http://localhost:5000/owners/updateOwner/${selectedIdOwner}`,
+        `http://localhost:5000/owner/updateOwner/${selectedIdOwner}`,
         formData
       )
       .then(() => {
@@ -97,11 +97,23 @@ const Owner = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/owners/allOwners")
+      .get("http://localhost:5000/owner/allOwners")
       .then((res) => {
-        setOwners(res.data.owners);
+        if (res.data && Array.isArray(res.data)) {
+          setOwners(res.data);
+        } else if (res.data && Array.isArray(res.data.owners)) {
+          setOwners(res.data.owners);
+        } else {
+          setOwners([]);
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(
+          "Erreur lors de la récupération des propriétaires :",
+          err
+        );
+        setOwners([]);
+      });
   }, []);
 
   return (
@@ -111,40 +123,47 @@ const Owner = () => {
         <Table sx={{ minWidth: 650 }} aria-label="owner table">
           <TableHead>
             <TableRow>
-              <TableCell>Nom du propriétaire</TableCell>{" "}
-              {/* Utilisez le nom du propriétaire ici */}
+              <TableCell>Nom du propriétaire</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Téléphone</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {owners.map((owner) => (
-              <TableRow key={owner.id}>
-                <TableCell align="center">{owner.name}</TableCell>
-                <TableCell align="center">{owner.email}</TableCell>
-                <TableCell align="center">{owner.phone}</TableCell>
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1}>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleClickOpen(owner.id)}
-                    >
-                      Supprimer
-                    </Button>
-                    <Divider orientation="vertical" />
-                    <Button
-                      variant="outlined"
-                      color="success"
-                      onClick={() => handleOpenUpdate(owner)}
-                    >
-                      Modifier
-                    </Button>
-                  </Stack>
+            {Array.isArray(owners) && owners.length > 0 ? (
+              owners.map((owner) => (
+                <TableRow key={owner.id}>
+                  <TableCell align="center">{owner.name}</TableCell>
+                  <TableCell align="center">{owner.email}</TableCell>
+                  <TableCell align="center">{owner.phone}</TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleClickOpen(owner.id)}
+                      >
+                        Supprimer
+                      </Button>
+                      <Divider orientation="vertical" />
+                      <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={() => handleOpenUpdate(owner)}
+                      >
+                        Modifier
+                      </Button>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  Aucun propriétaire trouvé.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -168,7 +187,7 @@ const Owner = () => {
               <TextField
                 label="Nom"
                 name="name"
-                value={formData.name} // Utilisez "name" ici
+                value={formData.name}
                 onChange={handleChange}
                 fullWidth
                 margin="dense"

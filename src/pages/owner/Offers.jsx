@@ -15,14 +15,15 @@ const Offers = () => {
   function handleApi(e) {
     e.preventDefault(); // Prevent default form submission behavior
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("date_debut", date_debut.toDate()); // Convert dayjs object to Date
-    formData.append("date_fin", date_fin.toDate()); // Convert dayjs object to Date
-    formData.append("description", description);
+    const data = {
+      name,
+      date_debut: date_debut.format("YYYY-MM-DD"), // Format dates
+      date_fin: date_fin.format("YYYY-MM-DD"), // Format dates
+      description,
+    };
 
     axios
-      .post("http://localhost:5000/offers/addOffer", formData)
+      .post("http://localhost:5000/offers/addOffer", data)
       .then((res) => {
         if (res.status === 200) {
           // Reset the form fields after successful submission

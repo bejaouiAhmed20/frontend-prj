@@ -10,7 +10,8 @@ function OwnerAuthPage({ isLogin, userType }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState(''); 
+  const [message, setMessage] = useState('');
+  const [messageColor, setMessageColor] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -32,13 +33,14 @@ function OwnerAuthPage({ isLogin, userType }) {
         localStorage.setItem(idKey, res.data[idKey]);
 
         if (isLogin) {
-        
+          setMessage('Login successful!');
+          setMessageColor('green');
           navigate(userType === 'owner' ? `/owner-home-page` : `/destinations`);
         } else {
-        
           setMessage('Registration successful! Please log in.');
+          setMessageColor('green');
 
-        
+          // Clear input fields after successful signup
           setName('');
           setFirstName('');
           setLastName('');
@@ -46,14 +48,22 @@ function OwnerAuthPage({ isLogin, userType }) {
           setPassword('');
           setPhone('');
 
+          // Redirect to login page after 2 seconds
           setTimeout(() => {
             navigate(`/login-${userType}`);
-          }, 2000); 
+          }, 2000);
         }
       })
       .catch((err) => {
         console.error('Error:', err);
-        setMessage('Invalid credentials, please try again.');
+
+        if (isLogin && err.response && err.response.data.message === 'Invalid credentials') {
+          setMessage('Your credentials are incorrect. Please verify and try again.');
+          setMessageColor('red');
+        } else {
+          setMessage('This email is already registered. Please use a different email.');
+          setMessageColor('orange');
+        }
       });
   };
 
@@ -63,7 +73,6 @@ function OwnerAuthPage({ isLogin, userType }) {
         <div className="auth-box">
           <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
           <form onSubmit={handleSubmit}>
-          
             {!isLogin && userType === 'owner' && (
               <div className="form-group">
                 <label>Name:</label>
@@ -131,7 +140,7 @@ function OwnerAuthPage({ isLogin, userType }) {
             </button>
           </form>
 
-          {message && <p className="message">{message}</p>}
+          {message && <p className="message" style={{ color: messageColor }}>{message}</p>}
 
           <p className="toggle-view" onClick={() => navigate(isLogin ? `/signup-${userType}` : `/login-${userType}`)}>
             {isLogin
@@ -233,7 +242,6 @@ const StyledWrapper = styled.div`
   /* Styling for message */
   .message {
     margin-top: 15px;
-    color: #ff0000;
     font-size: 14px;
     font-weight: bold;
   }

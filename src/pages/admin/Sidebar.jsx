@@ -12,7 +12,7 @@ const Sidebar = () => {
     <div className="h-screen w-20 bg-gray-900 text-white flex flex-col items-center py-4 fixed left-0 top-0">
       <div className="mb-8">
         <img
-          src="../../assets/Rezervi.png"
+          src="../../Rezervi.png"
           alt="Logo"
           className="w-16 h-16 object-contain"
         />

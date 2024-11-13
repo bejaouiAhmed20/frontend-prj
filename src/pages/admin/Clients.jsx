@@ -58,7 +58,7 @@ const Clients = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/clients/deleteClient/${selectedIdClient}`)
+      .delete(`http://localhost:5000/client/deleteClient/${selectedIdClient}`)
       .then(() => {
         toast.success("Client supprimé avec succès");
         setClients(
@@ -75,7 +75,7 @@ const Clients = () => {
   const handleUpdate = () => {
     axios
       .put(
-        `http://localhost:5000/clients/updateClient/${selectedIdClient}`,
+        `http://localhost:5000/client/updateClient/${selectedIdClient}`,
         formData
       )
       .then(() => {
@@ -103,7 +103,7 @@ const Clients = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/clients/allClients")
+      .get("http://localhost:5000/client/allClients")
       .then((res) => {
         setClients(res.data.clients);
       })

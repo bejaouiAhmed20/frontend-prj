@@ -43,7 +43,7 @@ function AdminHomePage() {
           <h2 className="text-xl font-bold">Owner Dashboard</h2>
           <Divider />
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="destination_owner">
               <FaHome className="mr-2" />
               <ListItemText primary="Home" />
             </ListItem>

@@ -2,9 +2,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"; // Import Navigate
-import AddDestination from './pages/admin/AddDestinationPage';
-import DestinationDetailsPage from './pages/user/DestinationDetailsPage';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom"; // Import Navigate
+import AddDestination from "./pages/admin/AddDestinationPage";
+import DestinationDetailsPage from "./pages/user/DestinationDetailsPage";
 import ClientPage from "./pages/user/DestinationsPage";
 import AdminTable from "./pages/admin/AdminTable";
 import Demands from "./pages/admin/Demands";
@@ -22,11 +26,13 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminProfile from "./pages/admin/AdminProfile";
 import Owner from "./pages/admin/Owner";
 import Clients from "./pages/admin/Clients";
-
+import MesRes from "./pages/user/MesRes";
+import DestinationsByOwner from "./pages/owner/DestinationsByOwner";
+import EditUserProfile from "./pages/user/EditUserProfile";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/home" replace />, 
+    element: <Navigate to="/home" replace />,
   },
   {
     path: "/admin",
@@ -42,7 +48,6 @@ const router = createBrowserRouter([
       { path: "profile", element: <AdminProfile /> },
       { path: "owners", element: <Owner /> },
       { path: "clients", element: <Clients /> },
-
     ],
   },
   {
@@ -73,8 +78,10 @@ const router = createBrowserRouter([
     path: "/owner-home-page",
     element: <AdminHomePage />,
     children: [
+      { index: true, element: <DestinationsByOwner /> },
+      { path: "destination_owner", element: <DestinationsByOwner /> },
       { path: "menus/:id", element: <MenuPage /> },
-      { path: "add_destination/:id", element: <AddDestination /> },
+      { path: "add_DestinationsByOwner/:id", element: <AddDestination /> },
       { path: "owner_profile/:id", element: <EditOwnerProfile /> },
       { path: "reservations", element: <ReservationsDisplay /> },
       { path: "offers", element: <Offers /> },
@@ -84,13 +91,19 @@ const router = createBrowserRouter([
     path: "/home",
     element: <HomePage />,
   },
+  { path: "user_profile", element: <EditUserProfile /> },
+
+  {
+    path: "/mes-reservations/:clientId",
+    element: <MesRes />,
+  },
   {
     path: "/about",
     element: <AboutPage />,
   },
   {
-    path: "*", 
-    element: <NotFoundPage />, 
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 
