@@ -16,10 +16,9 @@ const MenuPage = () => {
   const [open, setOpen] = useState(false);
   const [destinations, setDestinations] = useState([]);
   const navigate = useNavigate()
-
-  // Fetch all menus
+const idowner = localStorage.getItem("ownerId")
   useEffect(() => {
-    if(localStorage.getItem("ownerId")){
+    if(idowner){
     axios.get(`http://localhost:5000/menus/owner_menu/${id}`)
       .then(response => {
         setMenus(response.data);
@@ -33,12 +32,10 @@ const MenuPage = () => {
       }
   }, [id]);
 
-  // Fetch destinations and filter them based on owner id
   useEffect(() => {
-    axios.get("http://localhost:5000/destinations")
+    axios.get(`http://localhost:5000/destinations/owner/${idowner}`)
       .then(response => {
-        const filteredDestinations = response.data.filter(destination => destination.id_owner === parseInt(id, 10));
-        setDestinations(filteredDestinations);
+        setDestinations(response.data);
       })
       .catch((err) => {
         console.error("Error fetching Destinations:", err);
@@ -46,7 +43,6 @@ const MenuPage = () => {
       });
   }, [id]);
 
-  // Handle form input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setMenu((prevMenu) => ({
@@ -155,7 +151,6 @@ const MenuPage = () => {
             type="number"
           />
 
-          {/* Dropdown for selecting destination */}
           <FormControl fullWidth margin="dense">
             <InputLabel>Destination</InputLabel>
             <Select

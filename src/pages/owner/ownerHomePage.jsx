@@ -1,9 +1,23 @@
-import { Container, Drawer, List, ListItem, ListItemText, Divider } from "@mui/material";
+import {
+  Container,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, Link, Outlet } from "react-router-dom";
 import Card from "./Card.jsx";
-import { FaHome, FaPlus, FaUtensils, FaUser, FaTags, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaPlus,
+  FaUtensils,
+  FaUser,
+  FaTags,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 function AdminHomePage() {
   const [data, setData] = useState([]);
@@ -11,18 +25,17 @@ function AdminHomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(localStorage.getItem("ownerId")){
+    if (localStorage.getItem("ownerId")) {
       setId(localStorage.getItem("ownerId"));
-    }
-    else{
-      navigate("/login-owner")
+    } else {
+      navigate("/login-owner");
     }
   }, [id]);
 
-  function handleLogout () {
+  function handleLogout() {
     localStorage.clear();
     navigate(`/login-owner`);
-  };
+  }
 
   return (
     <div className="flex">
@@ -47,7 +60,11 @@ function AdminHomePage() {
               <FaHome className="mr-2" />
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button component={Link} to={`add_destination/${id}`}>
+            <ListItem
+              button
+              component={Link}
+              to={`add_DestinationsByOwner/${id}`}
+            >
               <FaPlus className="mr-2" />
               <ListItemText primary="Add Destination" />
             </ListItem>
@@ -77,7 +94,7 @@ function AdminHomePage() {
 
       <div className="flex-1 p-4 ml-[250px]">
         <Container>
-          <Outlet /> 
+          <Outlet />
         </Container>
       </div>
     </div>

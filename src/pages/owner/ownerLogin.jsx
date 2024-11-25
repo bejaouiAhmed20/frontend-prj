@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import NavBar from '../../components/NavBar';
 
 function OwnerAuthPage({ isLogin, userType }) {
   const [name, setName] = useState('');
@@ -69,7 +70,9 @@ function OwnerAuthPage({ isLogin, userType }) {
 
   return (
     <StyledWrapper>
-      <div className="auth-container">
+            <NavBar />
+            <div className='w-5 h-5 '></div>
+      <div className="auth-container ">
         <div className="auth-box">
           <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
           <form onSubmit={handleSubmit}>

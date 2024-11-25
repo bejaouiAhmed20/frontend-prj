@@ -25,14 +25,18 @@ const MesRes = () => {
 
   // Handle reservation cancellation
   const handleRefuse = (reservationId) => {
-    axios.delete(`http://localhost:5000/reservations/mesReservations/${reservationId}`)
+    axios.put(`http://localhost:5000/reservations/${reservationId}/reject`)
       .then(response => {
         console.log("Reservation cancelled successfully", response.data);
         // Filter out the cancelled reservation from the state
-        setReservations(reservations.filter(reservation => reservation.id !== reservationId));
+        setReservations((prevData) =>
+          prevData.filter((reservation) => reservation.idReservation !== reservationId)
+        );
+        setLoading(false);
       })
-      .catch(error => {
-        console.error('Error cancelling reservation:', error);
+      .catch((error) => {
+        console.error("Error rejecting reservation:", error);
+        setLoading(false);
       });
   };
 

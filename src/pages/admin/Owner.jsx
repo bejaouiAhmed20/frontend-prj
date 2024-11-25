@@ -61,7 +61,6 @@ const Owner = () => {
         toast.success("Propriétaire supprimé avec succès");
         setOwners(owners.filter((owner) => owner.id !== selectedIdOwner));
         setOpen(false);
-        navigate("/dashboard");
       })
       .catch((err) => {
         console.error("Erreur lors de la suppression :", err);

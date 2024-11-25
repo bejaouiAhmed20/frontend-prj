@@ -65,7 +65,7 @@ const Clients = () => {
           clients.filter((client) => client.idClient !== selectedIdClient)
         );
         setOpen(false);
-        navigate("/dashboard");
+        
       })
       .catch((err) => {
         console.error("Erreur lors de la suppression :", err);

@@ -1,4 +1,3 @@
-// index.js (Routes)
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -6,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
-} from "react-router-dom"; // Import Navigate
+} from "react-router-dom"; 
 import AddDestination from "./pages/admin/AddDestinationPage";
 import DestinationDetailsPage from "./pages/user/DestinationDetailsPage";
 import ClientPage from "./pages/user/DestinationsPage";

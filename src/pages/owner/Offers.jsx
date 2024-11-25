@@ -1,177 +1,218 @@
-import styled from "styled-components";
-import * as React from "react";
-import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Button,
+  Avatar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 const Offers = () => {
-  const [name, setName] = React.useState("");
-  const [date_debut, setDateDebut] = React.useState(dayjs()); // Initialize as dayjs object
-  const [date_fin, setDateFin] = React.useState(dayjs()); // Initialize as dayjs object
-  const [description, setDescription] = React.useState("");
+  const [offers, setOffers] = useState([]);
+  const [destinations, setDestinations] = useState([]);
+  const [name, setName] = useState("");
+  const [date_debut, setDateDebut] = useState("");
+  const [date_fin, setDateFin] = useState("");
+  const [description, setDescription] = useState("");
+  const [id_destination, setIdDestination] = useState("");
+  const navigate = useNavigate();
 
-  function handleApi(e) {
-    e.preventDefault(); // Prevent default form submission behavior
+  const id = localStorage.getItem("ownerId");
 
-    const data = {
+  // Fetch offers by owner
+  const fetchOffers = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/offers/offetsbyowner/${id}`
+      );
+      setOffers(response.data);
+    } catch (err) {
+      console.error("Error fetching Offers:", err);
+      toast.error("Failed to load offers.");
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchOffers();
+    } else {
+      navigate("/login");
+    }
+  }, [id, navigate]);
+
+  // Fetch destinations by owner
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/destinations/owner/${id}`)
+      .then((response) => {
+        setDestinations(response.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching Destinations:", err);
+        toast.error("Failed to load destinations.");
+      });
+  }, [id]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newOffer = {
       name,
-      date_debut: date_debut.format("YYYY-MM-DD"), // Format dates
-      date_fin: date_fin.format("YYYY-MM-DD"), // Format dates
+      date_debut,
+      date_fin,
       description,
+      id_destination,
     };
 
-    axios
-      .post("http://localhost:5000/offers/addOffer", data)
-      .then((res) => {
-        if (res.status === 200) {
-          // Reset the form fields after successful submission
-          setDescription("");
-          setName("");
-          setDateDebut(dayjs()); // Reset to current date
-          setDateFin(dayjs()); // Reset to current date
-        }
-      })
-      .catch((err) => console.error(err));
-  }
+    try {
+      await axios.post("http://localhost:5000/offers/addOffer", newOffer);
+      toast.success("Offer added successfully");
+      setName("");
+      setDateDebut("");
+      setDateFin("");
+      setDescription("");
+      setIdDestination("");
+      fetchOffers();
+    } catch (err) {
+      console.error("Error adding Offer:", err);
+      toast.error("Failed to add offer.");
+    }
+  };
+
+  const handleDelete = async (offerId) => {
+    try {
+      await axios.delete(`http://localhost:5000/offers/deleteOffer/${offerId}`);
+      toast.success("Offer deleted successfully");
+      setOffers((prevOffers) => prevOffers.filter((offer) => offer.id !== offerId));
+    } catch (err) {
+      console.error("Error deleting Offer:", err);
+      toast.error("Failed to delete offer.");
+    }
+  };
 
   return (
-    <StyledWrapper>
-      <h1>Add offer</h1>
-      <form className="form" onSubmit={handleApi}>
-        <div className="flex-column">
-          <label>Name</label>
-        </div>
-        <div className="inputForm">
-          <input
-            id="name"
-            placeholder="Enter the name of the offer"
-            className="input"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)} // Update state when input changes
-          />
-        </div>
-        <div className="flex-column">
-          <label>Date début & Date fin </label>
-        </div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            id="Date_début"
-            label="Date début"
-            value={date_debut}
-            onChange={(newDate) => setDateDebut(newDate)} // Update state when date changes
-          />
-        </LocalizationProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            id="Date_fin"
-            label="Date fin"
-            value={date_fin}
-            onChange={(newDate) => setDateFin(newDate)} // Update state when date changes
-          />
-        </LocalizationProvider>
-        <div className="flex-column">
-          <label>Description</label>
-        </div>
+    <div className="mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <h1 className="text-2xl font-bold text-center mb-6">Add Offer</h1>
 
-        <textarea
+        <TextField
+          label="Name"
+          variant="outlined"
+          fullWidth
           required
-          cols={50}
-          rows={10}
-          id="textarea"
-          name="textarea"
-          className="textarea"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)} // Update state when description changes
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
 
-        <button className="button-submit" type="submit">
-          Add offer
-        </button>
+        <TextField
+          label="Start Date"
+          type="date"
+          variant="outlined"
+          fullWidth
+          required
+          value={date_debut}
+          onChange={(e) => setDateDebut(e.target.value)}
+        />
+
+        <TextField
+          label="End Date"
+          type="date"
+          variant="outlined"
+          fullWidth
+          required
+          value={date_fin}
+          onChange={(e) => setDateFin(e.target.value)}
+        />
+
+        <TextField
+          label="Description"
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+          required
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
+        <FormControl fullWidth margin="dense">
+          <InputLabel>Destination</InputLabel>
+          <Select
+            label="Destination"
+            value={id_destination}
+            onChange={(e) => setIdDestination(e.target.value)}
+          >
+            {destinations.map((destination) => (
+              <MenuItem key={destination.id} value={destination.id}>
+                {destination.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button type="submit" variant="contained" color="primary" className="w-full py-3">
+          Add Offer
+        </Button>
       </form>
-    </StyledWrapper>
+
+      {/* Offers Table Section */}
+      <TableContainer component={Paper} className="mt-10">
+        <Table>
+          <TableHead className="bg-gray-200">
+            <TableRow>
+              <TableCell className="font-bold">Image</TableCell>
+              <TableCell className="font-bold">Destination Name</TableCell>
+              <TableCell className="font-bold">Name</TableCell>
+              <TableCell className="font-bold">Start Date</TableCell>
+              <TableCell className="font-bold">End Date</TableCell>
+              <TableCell className="font-bold">Description</TableCell>
+              <TableCell className="font-bold">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {offers.map((offer, index) => (
+              <TableRow key={index} className="hover:bg-gray-100">
+                <TableCell>
+                  <Avatar
+                    src={`http://localhost:5000/${offer.image}`}
+                    alt={offer.name}
+                    className="w-16 h-16 rounded-full"
+                    variant="rounded"
+                  />
+                </TableCell>
+                <TableCell>{offer.destination_name}</TableCell>
+                <TableCell>{offer.name}</TableCell>
+                <TableCell>{offer.date_debut}</TableCell>
+                <TableCell>{offer.date_fin}</TableCell>
+                <TableCell>{offer.description}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDelete(offer.id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
-
-const StyledWrapper = styled.div`
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: #ffffff;
-    padding: 30px;
-    width: 100%;
-    max-width: 500px; /* Limit the form width to help center-align */
-    margin: 0 auto; /* Center the form horizontally */
-    border-radius: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  }
-
-  ::placeholder {
-    font-family: inherit;
-  }
-
-  .form button {
-    align-self: flex-end;
-  }
-
-  .flex-column > label {
-    color: #151717;
-    font-weight: 600;
-  }
-
-  .inputForm {
-    border: 1.5px solid #ecedec;
-    border-radius: 10px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    transition: 0.2s ease-in-out;
-  }
-
-  .input {
-    flex: 1; /* Ensures the input takes available space */
-    margin-left: 10px;
-    border-radius: 10px;
-    border: none;
-    height: 100%;
-  }
-
-  .input:focus {
-    outline: none;
-  }
-
-  .inputForm:focus-within {
-    border: 1.5px solid #2d79f3;
-  }
-
-  .button-submit {
-    margin: 20px 0 10px 0;
-    background-color: #151717;
-    border: none;
-    color: white;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 10px;
-    height: 50px;
-    width: 100%;
-    max-width: 200px; /* Center button */
-    cursor: pointer;
-    align-self: center; /* Center button */
-  }
-
-  .textarea {
-    border: 1.5px solid #ecedec;
-    border-radius: 10px;
-    padding: 10px;
-    font-family: inherit;
-    font-size: 16px;
-    resize: none;
-  }
-`;
 
 export default Offers;

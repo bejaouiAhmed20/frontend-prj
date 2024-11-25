@@ -13,8 +13,13 @@ function ClientPage() {
   const [error, setError] = useState(null);
   const [ratings, setRatings] = useState({});
   const navigate = useNavigate();
+  const id = localStorage.getItem("clientId");
 
   useEffect(() => {
+    if(!id){
+      navigate("/login-client");
+    }
+    else{
     axios
       .get("http://localhost:5000/destinations")
       .then((res) => {
@@ -28,6 +33,7 @@ function ClientPage() {
         setError("Failed to load destinations.");
         setLoading(false);
       });
+    }
   }, []);
 
   const fetchAverageRatings = async (destinations) => {

@@ -4,6 +4,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
+import image from '../../assets/Rezervi.png'
 import { Link } from "react-router-dom";
 const Sidebar = () => {
   const [selected, setSelected] = useState("dashboard");
@@ -12,7 +13,7 @@ const Sidebar = () => {
     <div className="h-screen w-20 bg-gray-900 text-white flex flex-col items-center py-4 fixed left-0 top-0">
       <div className="mb-8">
         <img
-          src="../../Rezervi.png"
+          src={image}
           alt="Logo"
           className="w-16 h-16 object-contain"
         />
